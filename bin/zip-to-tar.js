@@ -7,19 +7,29 @@ const arg = args[0];
 
 const isTTY = process.stdin.isTTY;
 
-if (/^(-v|--version)$/.test(arg))
+if (/^(-v|--version)$/.test(arg)) {
     version();
-else if (!arg && isTTY || /^(-h|--help)$/.test(arg))
+} else if (!arg && isTTY || /^(-h|--help)$/.test(arg)) {
     help();
-else if (args.length)
+} else if (args.length) {
     eachSeries(args, main, exitIfError);
-else
-    require('..')(process.stdin)
-        .getStream()
-        .on('error', console.log)
-        .pipe(process.stdout);
+} else {
+    const zipToTar = require('..');
+    const pullout = require('pullout');
+    const zlib = require('zlib');
+    
+    pullout(process.stdin, (e, buffer) => {
+        exitIfError(e);
+        
+        zipToTar(buffer)
+            .getStream()
+            .on('error', exitIfError)
+            .pipe(zlib.createGzip())
+            .pipe(process.stdout);
+    });
+}
 
-function getTarPath(name) {
+function getZipPath(name) {
     if (/^(\/|~)/.test(name))
         return name;
     
@@ -27,20 +37,22 @@ function getTarPath(name) {
     return cwd + '/' + name;
 }
 
-function getZipPath(name) {
-    const reg = /\.tar(\.gz)?$/;
+function getTarPath(name) {
+    const reg = /\.zip/;
     
     if (reg.test(name))
-        return name.replace(reg, '.zip');
+        return name.replace(reg, '.tar.gz');
     
-    return name + '.zip';
+    return name + '.tar.gz';
 }
 
 function main(name, done) {
-    const tarToZip = require('..');
+    const zipToTar = require('..');
     const fs = require('fs');
+    const zlib = require('zlib');
     
     const onProgress = (n) => {
+        console.log('---');
         process.stdout.write(`\r${n}%: ${name}`);
     };
     
@@ -49,21 +61,22 @@ function main(name, done) {
         done();
     };
     
-    const pathTar = getTarPath(name);
+    const pathZip = getZipPath(name);
     
-    const pathZip = getZipPath(pathTar);
-    const zip = fs.createWriteStream(pathZip)
+    const pathTar = getTarPath(pathZip);
+    const tar = fs.createWriteStream(pathTar)
         .on('error', (e) => {
-            fs.unlinkSync(pathZip);
+            fs.unlink(pathTar, exitIfError);
             exitIfError(e);
         });
     
     const progress = true;
     
-    tarToZip(pathTar, {progress})
+    zipToTar(pathZip, {progress})
         .on('progress', onProgress)
         .getStream()
-        .pipe(zip)
+        .pipe(tar)
+        .pipe(zlib.createGzip())
         .on('finish', onFinish);
 }
 
@@ -71,6 +84,7 @@ function exitIfError(e) {
     if (!e)
         return;
     
+    console.error(e.message);
     process.exit(1);
 }
 

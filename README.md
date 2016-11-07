@@ -22,7 +22,7 @@ zip2tar *.zip
 >
 > (c) Mike Gancarz: The UNIX Philosophy
 
-Convert `tar` data from `stdin` and pipe it to `stdout`.
+Convert `zip` data from `stdin` and pipe it to `stdout`.
 
 ```
 cat arc.zip | zip2tar > arc.tar
