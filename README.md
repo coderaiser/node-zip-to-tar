@@ -111,13 +111,6 @@ zipToTar(zip, {progress})
     .on('finish', onFinish);
 ```
 
-## Environments
-
-In old `node.js` environments that not fully supports `es2015`, `zip-to-tar` could be used with:
-
-```js
-var zipToTar = require('zip-to-tar/legacy');
-```
 ## Related
 
 - [Jaguar](https://github.com/coderaiser/node-jaguar "Jaguar") - Pack and extract .tar.gz archives with emitter.
