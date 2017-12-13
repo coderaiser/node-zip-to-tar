@@ -52,7 +52,6 @@ function main(name, done) {
     const zlib = require('zlib');
     
     const onProgress = (n) => {
-        console.log('---');
         process.stdout.write(`\r${n}%: ${name}`);
     };
     
@@ -62,8 +61,8 @@ function main(name, done) {
     };
     
     const pathZip = getZipPath(name);
-    
     const pathTar = getTarPath(pathZip);
+    
     const tar = fs.createWriteStream(pathTar)
         .on('error', (e) => {
             fs.unlink(pathTar, exitIfError);
@@ -75,9 +74,9 @@ function main(name, done) {
     zipToTar(pathZip, {progress})
         .on('progress', onProgress)
         .getStream()
-        .pipe(tar)
         .pipe(zlib.createGzip())
-        .on('finish', onFinish);
+        .pipe(tar)
+        .on('close', onFinish);
 }
 
 function exitIfError(e) {
