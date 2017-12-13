@@ -4,7 +4,6 @@ const fs = require('fs');
 const path = require('path');
 
 const test = require('tape');
-const through2 = require('through2');
 const pullout = require('pullout');
 
 const zip2tar = require('..');
