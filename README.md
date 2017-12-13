@@ -1,6 +1,6 @@
 # zip-to-tar [![License][LicenseIMGURL]][LicenseURL] [![NPM version][NPMIMGURL]][NPMURL] [![Dependency Status][DependencyStatusIMGURL]][DependencyStatusURL] [![Build Status][BuildStatusIMGURL]][BuildStatusURL] [![Coverage Status][CoverageIMGURL]][CoverageURL]
 
-Convert tar and tar.gz archives to zip.
+Convert zip archives to tar.
 
 ## Global
 
@@ -73,22 +73,24 @@ zipToTar('file.zip', {progress})
     .on('file', console.log)
     .on('error', onError);
     .getStream()
-    .pipe(zip)
+    .pipe(tar)
     .on('finish', onFinish);
 
 ```
 
-### zipToTar(stream)
+### zipToTar(buffer)
 
-- `stream` - **ReadableStream** with `tar` data.
+- `buffer` - **Buffer** with `zip` data.
 
 ```js
 const zipToTar = require('zip-to-tar');
 const fs = require('fs');
 const {stdout} = process;
+
 const onProgress = (n) => {
     stdout.write(`\r${n}`);
 };
+
 const onFinish = (e) => {
     stdout.write('\n');
 };
@@ -97,15 +99,15 @@ const onError = ({message}) => {
     console.error(message)
 };
 
-const zip = fs.createWriteStream('file.zip');
+const zip = fs.readFileSync('file.zip');
 const tar = fs.createReadStream('file.tar');
 const progress = true;
 
-zipToTar(tar, {progress})
+zipToTar(zip, {progress})
     .on('file', console.log)
     .on('error', onError);
     .getStream()
-    .pipe(zip)
+    .pipe(tar)
     .on('finish', onFinish);
 ```
 
@@ -120,6 +122,7 @@ var zipToTar = require('zip-to-tar/legacy');
 
 - [Jaguar](https://github.com/coderaiser/node-jaguar "Jaguar") - Pack and extract .tar.gz archives with emitter.
 - [OneZip](https://github.com/coderaiser/node-onezip "OneZip") - Pack and extract zip archives with emitter.
+- [tar-to-zip](https://github.com/coderaiser/node-tar-to-zip "Tar To Zip") - Convert tar and tar.gz archives to zip.
 
 ## License
 

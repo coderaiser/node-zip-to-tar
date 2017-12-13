@@ -12,7 +12,7 @@ if (/^(-v|--version)$/.test(arg)) {
 } else if (!arg && isTTY || /^(-h|--help)$/.test(arg)) {
     help();
 } else if (args.length) {
-    eachSeries(args, main, exitIfError);
+    itchy(args, main, exitIfError);
 } else {
     const zipToTar = require('..');
     const pullout = require('pullout');
@@ -105,24 +105,6 @@ function help() {
     Object.keys(bin).forEach((name) => {
         console.log(`  ${name} ${bin[name]}`);
     });
-}
-
-function eachSeries(array, iterator, done) {
-    check(array, iterator, done);
-    
-    let i = -1;
-    const n = array.length;
-    
-    const loop = (e) => {
-       ++i;
-       
-       if (e || i === n)
-           return done(e);
-       
-       iterator(array[i], loop);
-    };
-    
-    loop();
 }
 
 function check(array, iterator, done) {
