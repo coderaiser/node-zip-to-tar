@@ -12,6 +12,7 @@ if (/^(-v|--version)$/.test(arg)) {
 } else if (!arg && isTTY || /^(-h|--help)$/.test(arg)) {
     help();
 } else if (args.length) {
+    const itchy = require('itchy');
     itchy(args, main, exitIfError);
 } else {
     const zipToTar = require('..');
@@ -105,16 +106,5 @@ function help() {
     Object.keys(bin).forEach((name) => {
         console.log(`  ${name} ${bin[name]}`);
     });
-}
-
-function check(array, iterator, done) {
-    if (!Array.isArray(array))
-        throw Error('array should be an array!');
-    
-    if (typeof iterator !== 'function')
-        throw Error('iterator should be a function');
-    
-    if (typeof done !== 'function')
-        throw Error('done should be a function');
 }
 
