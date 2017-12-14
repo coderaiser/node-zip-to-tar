@@ -107,7 +107,19 @@ test('zip2tar: files: progress', (t) => {
 
 test('zip2tar: dir', (t) => {
     const stream = zip2tar(getFixtureZipDir())
-        .getStream()
+        .getStream();
+    
+    pullout(stream, (e, buffer) => {
+        const tarLength = fs.readFileSync(getFixtureTarDir()).length;
+        t.equal(tarLength, buffer.length, 'should equal');
+        t.end();
+    });
+});
+
+test('zip2tar: dir', (t) => {
+    const progress = true;
+    const stream = zip2tar(getFixtureZipDir(), {progress})
+        .getStream();
     
     pullout(stream, (e, buffer) => {
         const tarLength = fs.readFileSync(getFixtureTarDir()).length;
