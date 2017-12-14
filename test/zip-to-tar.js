@@ -22,8 +22,16 @@ const getFixtureZipDir = (str = '') => {
     return path.join(__dirname, 'fixture/fixture.dir.zip' + str);
 };
 
+const getFixtureZip101Files = (str = '') => {
+    return path.join(__dirname, 'fixture/101-files.zip' + str);
+};
+
 const getFixtureTarDir = (str = '') => {
     return path.join(__dirname, 'fixture/fixture.dir.tar' + str);
+};
+
+const getFixtureTar101Files = (str = '') => {
+    return path.join(__dirname, 'fixture/101-files.tar' + str);
 };
 
 const getFixtureText = () => {
@@ -116,13 +124,13 @@ test('zip2tar: dir', (t) => {
     });
 });
 
-test('zip2tar: dir', (t) => {
+test('zip2tar: dir: progress', (t) => {
     const progress = true;
-    const stream = zip2tar(getFixtureZipDir(), {progress})
+    const stream = zip2tar(getFixtureZip101Files(), {progress})
         .getStream();
     
     pullout(stream, (e, buffer) => {
-        const tarLength = fs.readFileSync(getFixtureTarDir()).length;
+        const tarLength = fs.readFileSync(getFixtureTar101Files()).length;
         t.equal(tarLength, buffer.length, 'should equal');
         t.end();
     });
@@ -139,3 +147,4 @@ test('zip2tar: buffer', (t) => {
         t.end();
     });
 });
+
