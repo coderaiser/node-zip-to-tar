@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "itchy": "^1.0.0",
-    "pipe-io": "^3.0.0",
+    "pipe-io": "^4.0.1",
     "tar-stream": "^1.5.2",
     "yauzl": "^2.7.0"
   },
