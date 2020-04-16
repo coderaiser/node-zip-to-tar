@@ -40,7 +40,7 @@
   "author": "",
   "license": "MIT",
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=8"
   },
   "dependencies": {
     "itchy": "^1.0.0",
