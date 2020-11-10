@@ -1,3 +1,14 @@
+2020.11.10, v3.0.0
+
+feature:
+- (zip-to-tar) drop support of node < 10
+- (package) pullout v4.0.0
+- (package) tar-stream v2.1.4
+- (package) nyc v15.1.0
+- (package) nodemon v2.0.6
+- (package) eslint v7.13.0
+
+
 2020.04.16, v2.0.0
 
 feature:
